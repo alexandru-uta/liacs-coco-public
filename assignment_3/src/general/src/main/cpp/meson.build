@@ -1,1 +1,0 @@
-libgeneral_files += files('logger/logger.cpp')
