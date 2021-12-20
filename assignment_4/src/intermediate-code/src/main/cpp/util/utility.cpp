@@ -1,7 +1,9 @@
 #include "utility.h"
 
-int iop_arity(IOperator op) {
-    switch (op) {
+int iop_arity(IOperator op)
+{
+    switch (op)
+    {
     case IOP_ADD:
     case IOP_SUB:
     case IOP_MUL:
@@ -28,12 +30,12 @@ int iop_arity(IOperator op) {
     case IOP_SETL:
     case IOP_SETLE:
     case IOP_SETA:
-    case IOP_SETNB:
+    case IOP_SETAE:
     case IOP_SETB:
     case IOP_SETBE:
     case IOP_LARRAY:
     case IOP_RARRAY:
-            return 2;
+        return 2;
     case IOP_FUNC:
     case IOP_RETURN:
     case IOP_PARAM:
@@ -49,8 +51,10 @@ int iop_arity(IOperator op) {
     }
 }
 
-bool iop_has_result(IOperator op) {
-    switch (op) {
+bool iop_has_result(IOperator op)
+{
+    switch (op)
+    {
     case IOP_FUNCCALL:
     case IOP_ASSIGN:
     case IOP_LARRAY:
@@ -86,7 +90,7 @@ bool iop_has_result(IOperator op) {
     case IOP_SETL:
     case IOP_SETLE:
     case IOP_SETA:
-    case IOP_SETNB:
+    case IOP_SETAE:
     case IOP_SETB:
     case IOP_SETBE:
         return true;
@@ -95,23 +99,24 @@ bool iop_has_result(IOperator op) {
     }
 }
 
-bool iop_is_goto(IOperator op) {
-    return op == IOP_FUNCCALL || op == IOP_GOTO || op == IOP_JA || op == IOP_JB || op == IOP_JE || op == IOP_JNE
-        || op == IOP_JL || op == IOP_JNB || op == IOP_JGE || op == IOP_JBE || op == IOP_JLE || op == IOP_JG
-        || op == IOP_JNZ || op == IOP_JZ;
+bool iop_is_goto(IOperator op)
+{
+    return op == IOP_FUNCCALL || op == IOP_GOTO || op == IOP_JA || op == IOP_JB || op == IOP_JE || op == IOP_JNE || op == IOP_JL || op == IOP_JNB || op == IOP_JGE || op == IOP_JBE || op == IOP_JLE || op == IOP_JG || op == IOP_JNZ || op == IOP_JZ;
 }
 
-bool iop_is_cond_jmp(IOperator op) {
-    return op == IOP_JA || op == IOP_JB || op == IOP_JE || op == IOP_JNE || op == IOP_JL || op == IOP_JNB
-        || op == IOP_JGE || op == IOP_JBE || op == IOP_JLE || op == IOP_JG || op == IOP_JNZ || op == IOP_JZ;
+bool iop_is_cond_jmp(IOperator op)
+{
+    return op == IOP_JA || op == IOP_JB || op == IOP_JE || op == IOP_JNE || op == IOP_JL || op == IOP_JNB || op == IOP_JGE || op == IOP_JBE || op == IOP_JLE || op == IOP_JG || op == IOP_JNZ || op == IOP_JZ;
 }
 
-static bool isVariable(const SymbolTable& tab, size_t id) {
+static bool isVariable(const SymbolTable &tab, size_t id)
+{
     SymbolType st = tab.getSymbol(id)->getSymbolType();
     return st == ST_VARIABLE || st == ST_PARAMETER || st == ST_TEMPVAR;
 }
 
-bool iop_reads_op1(const SymbolTable& tab, IStatement* stmt) {
+bool iop_reads_op1(const SymbolTable &tab, IStatement *stmt)
+{
     if (iop_arity(stmt->getOperator()) == 0 || stmt->getOperand1() == nullptr)
         return false;
     if (stmt->getOperand1()->getOperandType() != OT_SYMBOL)
@@ -120,7 +125,8 @@ bool iop_reads_op1(const SymbolTable& tab, IStatement* stmt) {
 }
 
 // Return whether the statement reads a variable at operand 2
-bool iop_reads_op2(const SymbolTable& tab, IStatement* stmt) {
+bool iop_reads_op2(const SymbolTable &tab, IStatement *stmt)
+{
     if (iop_arity(stmt->getOperator()) < 2)
         return false;
     if (stmt->getOperand2()->getOperandType() != OT_SYMBOL)
@@ -128,7 +134,8 @@ bool iop_reads_op2(const SymbolTable& tab, IStatement* stmt) {
     return isVariable(tab, std::dynamic_pointer_cast<SymbolIOperand>(stmt->getOperand2())->getId());
 }
 
-bool iop_writes_result(const SymbolTable& tab, IStatement* stmt) {
+bool iop_writes_result(const SymbolTable &tab, IStatement *stmt)
+{
     if (!iop_has_result(stmt->getOperator()))
         return false;
     if (stmt->getResult() == nullptr || stmt->getResult()->getOperandType() != OT_SYMBOL)
