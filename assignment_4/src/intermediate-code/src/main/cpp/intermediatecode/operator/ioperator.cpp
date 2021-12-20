@@ -1,8 +1,10 @@
 #include "ioperator.h"
 
-template<>
-std::string util::to_string<IOperator>(IOperator op) {
-    switch (op) {
+template <>
+std::string util::to_string<IOperator>(IOperator op)
+{
+    switch (op)
+    {
     case IOP_UNKNOWN:
         return "unknown";
     case IOP_LABEL:
@@ -85,8 +87,8 @@ std::string util::to_string<IOperator>(IOperator op) {
         return "SET IF LESS EQUAL";
     case IOP_SETA:
         return "SET ABOVE";
-    case IOP_SETNB:
-        return "SET NOT ABOVE";
+    case IOP_SETAE:
+        return "SET ABOVE EQUAL";
     case IOP_SETB:
         return "SET BELOW";
     case IOP_SETBE:
